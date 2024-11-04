@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"editor.tabSize": 4,
+		"editor.rulers": [
+			135
+		],
+		"[python]": {
+			"editor.formatOnSave": true,
+			"editor.defaultFormatter": "ms-python.autopep8",
+			"editor.codeActionsOnSave": {
+				"source.fixAll": "always",
+				"source.organizeImports": "always"
+			},
+		},
+		"python.defaultInterpreterPath": ".venv/bin/python",
+		"cSpell.enabled": false,
+	}
+}
