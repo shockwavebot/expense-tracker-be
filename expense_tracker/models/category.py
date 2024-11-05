@@ -1,14 +1,12 @@
-from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from expense_tracker.db.base import Base
-from expense_tracker.models.user import User
+from expense_tracker.models.base import TimestampedBase
 
 
-class Category(Base):
+class Category(TimestampedBase):
     __tablename__ = "categories"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -16,9 +14,8 @@ class Category(Base):
     description: Mapped[Optional[str]] = mapped_column(
         String(255), nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.now()
-    )
 
-    user: Mapped["User"] = relationship("User", back_populates="categories")
+    # Use string reference to avoid circular import
+    user: Mapped["User"] = relationship(
+        "User", back_populates="categories"
+    )

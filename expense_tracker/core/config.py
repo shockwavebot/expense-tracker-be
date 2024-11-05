@@ -1,6 +1,5 @@
-from typing import Any
-
-from pydantic import PostgresDsn, field_validator
+# expense_tracker/core/config.py
+from pydantic import Field, PostgresDsn
 from pydantic_settings import BaseSettings
 
 
@@ -8,24 +7,22 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Expense Tracker"
     API_V1_STR: str = "/api/v1"
 
-    POSTGRES_SERVER: str = "localhost"
-    POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "postgres"
-    POSTGRES_DB: str = "expense_tracker"
-    SQLALCHEMY_DATABASE_URI: PostgresDsn | None = None
+    # Database settings
+    POSTGRES_SERVER: str = Field(default="localhost")
+    POSTGRES_USER: str = Field(default="postgres")
+    POSTGRES_PASSWORD: str = Field(default="postgres")
+    POSTGRES_DB: str = Field(default="expense_tracker")
+    POSTGRES_PORT: int = Field(default=5432)
 
-    @field_validator("SQLALCHEMY_DATABASE_URI", mode='before')
-    def assemble_db_connection(cls, v: str | None, info: Any) -> Any:
-        if isinstance(v, str):
-            return v
-
-        values = info.data
+    @property
+    def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
         return PostgresDsn.build(
-            scheme="postgresql",
-            username=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_SERVER"),
-            path=f"/{values.get('POSTGRES_DB') or ''}"
+            scheme="postgresql+asyncpg",
+            username=self.POSTGRES_USER,
+            password=self.POSTGRES_PASSWORD,
+            host=self.POSTGRES_SERVER,
+            port=self.POSTGRES_PORT,
+            path=self.POSTGRES_DB
         )
 
     class Config:

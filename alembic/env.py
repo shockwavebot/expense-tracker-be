@@ -1,22 +1,37 @@
+# alembic/env.py
+from expense_tracker.core.config import settings
+from expense_tracker import Base
+from alembic import context
 import asyncio
+import os
+import sys
 from logging.config import fileConfig
 
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from sqlalchemy.pool import NullPool
 
-from alembic import context
-from expense_tracker.core.config import settings
-from expense_tracker.models import Base
+# Add the project root directory to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
+
+# from expense_tracker.models import User, Category
+
+# this is the Alembic Config object
 config = context.config
-fileConfig(config.config_file_name)
+
+# Interpret the config file for Python logging.
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
+
 target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
-    url = str(settings.SQLALCHEMY_DATABASE_URI)
+    url = str(settings.SQLALCHEMY_DATABASE_URI).replace(
+        "postgresql://", "postgresql+asyncpg://"
+    )
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -29,7 +44,6 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    """Run actual migrations."""
     context.configure(connection=connection, target_metadata=target_metadata)
     with context.begin_transaction():
         context.run_migrations()
@@ -37,14 +51,15 @@ def do_run_migrations(connection: Connection) -> None:
 
 async def run_async_migrations() -> None:
     """Run migrations in an async context."""
-    configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = str(settings.SQLALCHEMY_DATABASE_URI)
+    configuration = config.get_section(config.config_ini_section, {})
+    configuration["sqlalchemy.url"] = str(settings.SQLALCHEMY_DATABASE_URI).replace(
+        "postgresql://", "postgresql+asyncpg://"
+    )
 
-    # Configure the async engine to use NullPool
     connectable = async_engine_from_config(
         configuration,
         prefix="sqlalchemy.",
-        poolclass=NullPool,  # Using NullPool for migrations
+        poolclass=NullPool,
     )
 
     async with connectable.connect() as connection:
