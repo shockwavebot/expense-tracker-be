@@ -1,9 +1,26 @@
-# scripts/init_db.py
 import asyncio
+import logging
 
 import asyncpg
 
 from expense_tracker.core.config import settings
+from expense_tracker.db.base import engine
+from expense_tracker.models import Base
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+async def create_tables() -> None:
+    """Create database tables"""
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("Tables created successfully")
+    except Exception as e:
+        logger.error(f"Error creating tables: {str(e)}")
+        raise
 
 
 async def init_db():
@@ -54,3 +71,4 @@ async def init_db():
 
 if __name__ == "__main__":
     asyncio.run(init_db())
+    asyncio.run(create_tables())

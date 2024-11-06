@@ -1,21 +1,24 @@
+# expense_tracker/models/category.py
 from typing import Optional
 
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from expense_tracker.models.base import TimestampedBase
+from expense_tracker.models.base import Base, TimestampMixin
 
 
-class Category(TimestampedBase):
+class Category(Base, TimestampMixin):
     __tablename__ = "categories"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(50))
+    name: Mapped[str] = mapped_column(String(50), nullable=False)
     description: Mapped[Optional[str]] = mapped_column(
         String(255), nullable=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"), nullable=False)
 
-    # Use string reference to avoid circular import
+    # Relationships
     user: Mapped["User"] = relationship(
-        "User", back_populates="categories"
+        "User",
+        back_populates="categories"
     )

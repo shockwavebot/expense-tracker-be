@@ -1,7 +1,6 @@
-# expense_tracker/main.py
 from fastapi import FastAPI
 
-from expense_tracker.api.v1.endpoints import auth, users
+from expense_tracker.api.v1.endpoints import auth, categories, users
 from expense_tracker.core.config import settings
 
 app = FastAPI(
@@ -19,6 +18,11 @@ app.include_router(
     users.router,
     prefix=f"{settings.API_V1_STR}/users",
     tags=["users"]
+)
+app.include_router(
+    categories.router,
+    prefix=f"{settings.API_V1_STR}/categories",
+    tags=["categories"]
 )
 
 
