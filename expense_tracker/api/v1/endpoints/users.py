@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from expense_tracker.core.security import get_current_user, get_password_hash
-from expense_tracker.db.base import get_session
+from expense_tracker.db.session import get_session
 from expense_tracker.models.user import User
 from expense_tracker.schemas.user import User as UserSchema
 from expense_tracker.schemas.user import UserCreate, UserUpdate

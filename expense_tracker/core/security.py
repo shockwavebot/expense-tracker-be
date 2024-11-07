@@ -9,8 +9,8 @@ from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from expense_tracker.core.config import settings
-from expense_tracker.db.base import get_session
+from expense_tracker.core.settings import settings
+from expense_tracker.db.session import get_session
 from expense_tracker.models.user import User
 from expense_tracker.schemas.token import TokenPayload
 

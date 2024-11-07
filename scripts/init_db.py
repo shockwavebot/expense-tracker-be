@@ -3,8 +3,8 @@ import logging
 
 import asyncpg
 
-from expense_tracker.core.config import settings
-from expense_tracker.db.base import engine
+from expense_tracker.core.settings import settings
+from expense_tracker.db.session import engine
 from expense_tracker.models import Base
 
 logging.basicConfig(level=logging.INFO)

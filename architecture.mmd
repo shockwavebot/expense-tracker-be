@@ -1,0 +1,20 @@
+graph TB
+    Client[Client Applications]
+    API[FastAPI REST API]
+    Auth[Authentication Service]
+    DB[(PostgreSQL Database)]
+    Cache[(Redis Cache)]
+    
+    Client -->|HTTP/REST| API
+    API -->|Authenticate| Auth
+    API -->|Query/Persist| DB
+    API -->|Cache| Cache
+    
+    subgraph Backend Services
+        API
+        Auth
+        subgraph Data Layer
+            DB
+            Cache
+        end
+    end
