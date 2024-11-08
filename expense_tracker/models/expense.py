@@ -12,7 +12,7 @@ from .base import Base, TimestampMixin
 if TYPE_CHECKING:
     # Import only for type checking to avoid circular dependencies
     from .category import Category
-    from .expense import SharedExpense
+    from .shared_expense import SharedExpense
     from .user import User
 
 

@@ -41,6 +41,7 @@ class SharedExpense(Base, TimestampMixin):
         expense: The expense being shared
         shared_with_user: The user this expense is shared with
     """
+    __tablename__ = "shared_expense"
 
     # Foreign keys
     expense_id: Mapped[uuid.UUID] = mapped_column(

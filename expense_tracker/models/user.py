@@ -8,7 +8,9 @@ from expense_tracker.models.base import Base, TimestampMixin
 
 if TYPE_CHECKING:
     # Import only for type checking to avoid circular dependencies
+    from .category import Category
     from .expense import Expense
+    from .shared_expense import SharedExpense
 
 
 class User(Base, TimestampMixin):
@@ -41,4 +43,13 @@ class User(Base, TimestampMixin):
     expenses: Mapped[List["Expense"]] = relationship(
         back_populates="user",
         cascade="all, delete-orphan"  # If user is deleted, delete their expenses
+    )
+
+    categories: Mapped[List["Category"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan"  # If user is deleted, delete their custom categories
+    )
+
+    shared_with_me: Mapped[List["SharedExpense"]] = relationship(
+        back_populates="shared_with_user"
     )

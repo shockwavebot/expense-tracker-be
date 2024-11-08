@@ -1,34 +1,36 @@
+# expense_tracker/schemas/user.py
+import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
+
+from .base import BaseSchema
 
 
-class UserBase(BaseModel):
+class UserBase(BaseSchema):
+    """Base schema for user data"""
     email: EmailStr
     username: str = Field(..., min_length=3, max_length=50)
 
 
 class UserCreate(UserBase):
-    password: str = Field(..., min_length=8)
+    """Schema for creating a new user"""
+    pass
 
 
-class UserUpdate(BaseModel):
+class UserUpdate(BaseSchema):
+    """Schema for updating a user"""
     email: EmailStr | None = None
     username: str | None = Field(None, min_length=3, max_length=50)
 
 
-class UserInDBBase(UserBase):
-    id: int
-    is_active: bool
+class UserInDB(UserBase):
+    """Schema for user data from database"""
+    id: uuid.UUID
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    updated_at: datetime
 
 
-class User(UserInDBBase):
+class UserResponse(UserInDB):
+    """Schema for user response"""
     pass
-
-
-class UserInDB(UserInDBBase):
-    hashed_password: str

@@ -41,3 +41,10 @@ class TimestampMixin:
         onupdate=func.now(),
         nullable=False
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.created_at:
+            self.created_at = func.now()
+        if not self.updated_at:
+            self.updated_at = func.now()
