@@ -35,7 +35,9 @@ async def get_or_create_user(session: AsyncSession, email: str, username: str) -
     # Create new user
     user = User(
         email=email,
-        username=username
+        username=username,
+        created_at=current_time,
+        updated_at=current_time
     )
     session.add(user)
     try:
@@ -337,7 +339,7 @@ async def main():
         users = await create_users(session)
         categories = await create_categories(session, users)
         expenses = await create_expenses(session, users, categories)
-        shared_expenses = await create_shared_expenses(session, users, expenses)
+        _shared_expenses = await create_shared_expenses(session, users, expenses)
 
     print("Database seeding completed!✅")
 

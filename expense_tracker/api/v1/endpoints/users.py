@@ -1,84 +1,132 @@
-from typing import Annotated
+# expense_tracker/api/v1/endpoints/users.py
+from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from expense_tracker.core.security import get_current_user, get_password_hash
+from expense_tracker.core.exceptions import DuplicateEmailError, UserNotFoundError
 from expense_tracker.db.session import get_session
-from expense_tracker.models.user import User
-from expense_tracker.schemas.user import User as UserSchema
-from expense_tracker.schemas.user import UserCreate, UserUpdate
+from expense_tracker.schemas.user import UserCreate, UserResponse, UserUpdate
+from expense_tracker.services.user import UserService
 
 router = APIRouter()
 
 
-async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
-    result = await db.execute(
-        select(User).where(User.email == email)
-    )
-    return result.scalar_one_or_none()
-
-
-@router.post("", response_model=UserSchema, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+    description="Create a new user"
+)
 async def create_user(
-    user_in: UserCreate,
-    db: Annotated[AsyncSession, Depends(get_session)]
-):
+    user_data: UserCreate,
+    db: AsyncSession = Depends(get_session)
+) -> UserResponse:
     """
-    Create new user.
+    Create a new user with the following information:
+    - email: unique email address
+    - name: user's full name
     """
-    # Check if user with this email exists
-    if await get_user_by_email(db, email=user_in.email):
+    user_service = UserService(db)
+    try:
+        user = await user_service.create_user(user_data)
+        return user
+    except DuplicateEmailError as e:
         raise HTTPException(
-            status_code=400,
-            detail="User with this email already exists."
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(e)
         )
 
-    user = User(
-        email=user_in.email,
-        username=user_in.username,
-        hashed_password=get_password_hash(user_in.password),
-    )
-    db.add(user)
-    await db.commit()
-    await db.refresh(user)
-    return user
 
-
-@router.get("/me", response_model=UserSchema)
-async def read_user_me(
-    current_user: Annotated[User, Depends(get_current_user)]
-):
+@router.get(
+    "/{user_id}",
+    response_model=UserResponse,
+    description="Get user by ID"
+)
+async def get_user(
+    user_id: str,
+    db: AsyncSession = Depends(get_session)
+) -> UserResponse:
     """
-    Get current user.
+    Retrieve a user by their ID
     """
-    return current_user
+    user_service = UserService(db)
+    try:
+        user = await user_service.get_user_by_id(user_id)
+        return user
+    except UserNotFoundError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
 
 
-@router.put("/me", response_model=UserSchema)
-async def update_user_me(
-    user_in: UserUpdate,
-    current_user: Annotated[User, Depends(get_current_user)],
-    db: Annotated[AsyncSession, Depends(get_session)]
-):
+@router.put(
+    "/{user_id}",
+    response_model=UserResponse,
+    description="Update user information"
+)
+async def update_user(
+    user_id: str,
+    user_data: UserUpdate,
+    db: AsyncSession = Depends(get_session)
+) -> UserResponse:
     """
-    Update current user.
+    Update user information. The following fields can be updated:
+    - email: new email address (must be unique)
+    - username: new full name
     """
-    if user_in.email and user_in.email != current_user.email:
-        if await get_user_by_email(db, email=user_in.email):
-            raise HTTPException(
-                status_code=400,
-                detail="Email already registered"
-            )
+    user_service = UserService(db)
+    try:
+        user = await user_service.update_user(user_id, user_data)
+        return user
+    except UserNotFoundError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+    except DuplicateEmailError as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(e)
+        )
 
-    for field, value in user_in.model_dump(exclude_unset=True).items():
-        if field == "password":
-            setattr(current_user, "hashed_password", get_password_hash(value))
-        else:
-            setattr(current_user, field, value)
 
-    db.add(current_user)
-    await db.commit()
-    await db.refresh(current_user)
-    return current_user
+@router.delete(
+    "/{user_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    description="Delete a user"
+)
+async def delete_user(
+    user_id: str,
+    db: AsyncSession = Depends(get_session)
+) -> None:
+    """
+    Delete a user and all their associated data
+    """
+    user_service = UserService(db)
+    try:
+        await user_service.delete_user(user_id)
+    except UserNotFoundError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+
+
+@router.get(
+    "",
+    response_model=List[UserResponse],
+    description="List all users"
+)
+async def list_users(
+    skip: int = 0,
+    limit: int = 100,
+    db: AsyncSession = Depends(get_session)
+) -> List[UserResponse]:
+    """
+    Retrieve a list of users with pagination
+    """
+    user_service = UserService(db)
+    users = await user_service.list_users(skip=skip, limit=limit)
+    return users

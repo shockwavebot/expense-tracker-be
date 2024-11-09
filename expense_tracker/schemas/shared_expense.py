@@ -2,6 +2,7 @@
 import uuid
 from datetime import datetime
 from decimal import Decimal
+from enum import Enum
 from typing import Optional
 
 from pydantic import Field
@@ -11,7 +12,7 @@ from .expense import ExpenseResponse
 from .user import UserResponse
 
 
-class SharedExpenseStatus(str):
+class SharedExpenseStatus(str, Enum):
     PENDING = "pending"
     ACCEPTED = "accepted"
     REJECTED = "rejected"

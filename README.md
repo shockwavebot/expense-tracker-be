@@ -70,7 +70,7 @@ Docker&psql:
 # list tables
 docker exec -it expense_tracker_db psql -U postgres -d expense_tracker -c "\dt"
 # list users
-docker exec -it expense_tracker_db psql -U postgres -d expense_tracker -c "SELECT * FROM users;"
+docker exec -it expense_tracker_db psql -U postgres -d expense_tracker -c "SELECT * FROM user;"
 docker-compose exec postgres psql -U expense_tracker -d expense_tracker -c "DROP TABLE IF EXISTS alembic_version;"
 ```
 
