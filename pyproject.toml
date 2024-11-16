@@ -7,18 +7,18 @@ requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.13.3",
     "asyncpg>=0.30.0",
+    "bcrypt==4.0.1",
     "fastapi>=0.115.4",
     "greenlet>=3.1.1",
     "passlib==1.7.4",
-    "pydantic[email]>=2.9.2",
+    "psycopg2-binary>=2.9.10",
     "pydantic-settings>=2.6.1",
+    "pydantic[email]>=2.9.2",
     "python-dotenv>=1.0.1",
     "python-jose>=3.3.0",
     "python-multipart>=0.0.17",
     "sqlalchemy>=2.0.36",
     "uvicorn>=0.32.0",
-    "bcrypt==4.0.1",
-    "psycopg2-binary>=2.9.10",
 ]
 
 [tool.uv]
@@ -27,9 +27,29 @@ dev-dependencies = [
     "flake8>=7.1.1",
     "httpx>=0.27.2",
     "isort>=5.13.2",
-    "pytest>=8.3.3",
-    "pytest-cov>=6.0.0",
     "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "pytest-env>=1.1.5",
+    "pytest>=8.3.3",
     "ruff>=0.7.2",
-    "httpx>=0.27.2",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict" # or "auto" ?
+# Set default event loop scope to "function"
+env = [
+    "POSTGRES_USER=postgres",
+    "POSTGRES_PASSWORD=postgres",
+    "POSTGRES_HOST=localhost",
+    "POSTGRES_PORT=5432",
+    "POSTGRES_DB=expense_tracker_test"
+]
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-v"
+testpaths = [
+    "test",
+]
+python_files = "test_*.py"
+filterwarnings = [
+    "ignore::DeprecationWarning:pytest_asyncio.*:"
 ]

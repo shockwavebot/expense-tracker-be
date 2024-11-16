@@ -7,7 +7,7 @@ from sqlalchemy.orm import DeclarativeBase
 from expense_tracker.core.settings import settings
 
 engine = create_async_engine(
-    settings.ASYNC_DATABASE_URL,
+    settings.async_database_url,
     echo=True
 )
 AsyncSessionLocal = async_sessionmaker(

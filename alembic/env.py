@@ -1,6 +1,4 @@
 # alembic/env.py
-from expense_tracker.models.base import Base
-from expense_tracker.core.settings import settings
 import os
 import sys
 from logging.config import fileConfig
@@ -8,6 +6,8 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
+from expense_tracker.core.settings import settings
+from expense_tracker.models.base import Base
 
 # Add the parent directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -46,7 +46,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = settings.SYNC_DATABASE_URL
+    url = settings.sync_database_url
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -66,7 +66,7 @@ def run_migrations_online() -> None:
 
     """
     configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = settings.SYNC_DATABASE_URL
+    configuration["sqlalchemy.url"] = settings.sync_database_url
     connectable = engine_from_config(
         configuration,
         prefix="sqlalchemy.",
