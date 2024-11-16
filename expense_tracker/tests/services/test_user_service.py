@@ -1,4 +1,6 @@
 # expense_tracker/tests/services/test_user_service.py
+import uuid
+
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,14 +9,20 @@ from expense_tracker.schemas.user import UserCreate, UserUpdate
 from expense_tracker.services.user import UserService
 
 
+def rnd_email() -> str:
+    rnd = str(uuid.uuid4())[:16]
+    return f"test_{rnd}@example.com"
+
+
 @pytest.mark.asyncio
 class TestUserService:
     async def test_create_user(self, db_session: AsyncSession):
         # Arrange
+        email = rnd_email()
         service = UserService(db_session)
         user_data = UserCreate(
-            email="test@example.com",
-            name="Test User"
+            email=email,
+            username="Test User"
         )
 
         # Act
@@ -22,15 +30,15 @@ class TestUserService:
 
         # Assert
         assert user.email == user_data.email
-        assert user.name == user_data.name
+        assert user.username == user_data.username
         assert user.id is not None
 
     async def test_create_duplicate_email(self, db_session: AsyncSession):
         # Arrange
         service = UserService(db_session)
         user_data = UserCreate(
-            email="duplicate@example.com",
-            name="Test User"
+            email=rnd_email(),
+            username="Test User"
         )
 
         # Act & Assert
@@ -42,8 +50,8 @@ class TestUserService:
         # Arrange
         service = UserService(db_session)
         user_data = UserCreate(
-            email="get@example.com",
-            name="Get User"
+            email=rnd_email(),
+            username="Get User"
         )
         created_user = await service.create_user(user_data)
 
@@ -53,7 +61,7 @@ class TestUserService:
         # Assert
         assert user.id == created_user.id
         assert user.email == user_data.email
-        assert user.name == user_data.name
+        assert user.username == user_data.username
 
     async def test_get_nonexistent_user(self, db_session: AsyncSession):
         # Arrange
@@ -67,27 +75,27 @@ class TestUserService:
         # Arrange
         service = UserService(db_session)
         user_data = UserCreate(
-            email="update@example.com",
-            name="Update User"
+            email=rnd_email(),
+            username="Update User"
         )
         user = await service.create_user(user_data)
 
-        update_data = UserUpdate(name="Updated Name")
+        update_data = UserUpdate(username="Updated Name")
 
         # Act
         updated_user = await service.update_user(str(user.id), update_data)
 
         # Assert
         assert updated_user.id == user.id
-        assert updated_user.name == "Updated Name"
+        assert updated_user.username == "Updated Name"
         assert updated_user.email == user_data.email
 
     async def test_delete_user(self, db_session: AsyncSession):
         # Arrange
         service = UserService(db_session)
         user_data = UserCreate(
-            email="delete@example.com",
-            name="Delete User"
+            email=rnd_email(),
+            username="Delete User"
         )
         user = await service.create_user(user_data)
 
@@ -100,9 +108,10 @@ class TestUserService:
 
     async def test_list_users(self, db_session: AsyncSession):
         # Arrange
+        test_email = rnd_email()
         service = UserService(db_session)
         users_data = [
-            UserCreate(email=f"user{i}@example.com", name=f"User {i}")
+            UserCreate(email=f"user{i}{test_email}", username=f"User {i}")
             for i in range(3)
         ]
 

@@ -8,7 +8,8 @@ Track all known issues and bugs here.
 List all feature suggestions and enhancements here.
 - **Testing: DB cleanup before tests with predefined data in it**
   - **Description**: As wip, initial prod db migration is cloned to test db, db should be always in same state
-
+- **DB: do not use builtin table neame user, use users**
+  - **Description**: create a db migration script for renaming the table
 
 ---
 ## 🗂 Categories

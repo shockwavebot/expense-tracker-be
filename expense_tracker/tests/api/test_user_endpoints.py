@@ -1,14 +1,22 @@
 # expense_tracker/tests/api/test_user_endpoints.py
+import uuid
+
 import pytest
 from fastapi.testclient import TestClient
+
+
+def rnd_email() -> str:
+    rnd = str(uuid.uuid4())[:16]
+    return f"test_{rnd}@example.com"
 
 
 @pytest.mark.asyncio
 class TestUserEndpoints:
     async def test_create_user(self, client: TestClient):
         # Arrange
+        test_email = rnd_email()
         user_data = {
-            "email": "api_test_create_user@example.com",
+            "email": test_email,
             "username": "api_test_create_user"
         }
 
@@ -24,8 +32,9 @@ class TestUserEndpoints:
 
     async def test_create_user_duplicate_email(self, client: TestClient):
         # Arrange
+        test_email = rnd_email()
         user_data = {
-            "email": "duplicate_api@example.com",
+            "email": test_email,
             "username": "Duplicate API User"
         }
 
@@ -39,8 +48,9 @@ class TestUserEndpoints:
 
     async def test_get_user(self, client: TestClient):
         # Arrange
+        test_email = rnd_email()
         user_data = {
-            "email": "get_api@example.com",
+            "email": test_email,
             "username": "Get API User"
         }
         create_response = client.post("/api/v1/users", json=user_data)
@@ -65,8 +75,9 @@ class TestUserEndpoints:
 
     async def test_update_user(self, client: TestClient):
         # Arrange
+        test_email = rnd_email()
         user_data = {
-            "email": "update_api@example.com",
+            "email": test_email,
             "username": "Update API User"
         }
         create_response = client.post("/api/v1/users", json=user_data)
@@ -87,8 +98,9 @@ class TestUserEndpoints:
 
     async def test_delete_user(self, client: TestClient):
         # Arrange
+        test_email = rnd_email()
         user_data = {
-            "email": "delete_api@example.com",
+            "email": test_email,
             "username": "Delete API User"
         }
         create_response = client.post("/api/v1/users", json=user_data)
@@ -104,9 +116,10 @@ class TestUserEndpoints:
 
     async def test_list_users(self, client: TestClient):
         # Arrange
+        test_email = rnd_email()
         users_data = [
             {
-                "email": f"list_api_{i}@example.com",
+                "email": f"list_api_{i}_{test_email}",
                 "username": f"List API User {i}"
             }
             for i in range(3)
