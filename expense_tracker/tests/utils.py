@@ -14,8 +14,8 @@ def create_test_model(model_cls: Type[T], **kwargs: Any) -> T:
     try:
         return model_cls(**kwargs)
     except Exception as e:
-        logger.error(f"Failed to create test model {
-                     model_cls.__name__}: {str(e)}")
+        logger.error(
+            f"Failed to create test model {model_cls.__name__}: {str(e)}")
         raise
 
 

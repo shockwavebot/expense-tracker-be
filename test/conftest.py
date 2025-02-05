@@ -145,9 +145,6 @@ async def client() -> AsyncGenerator[AsyncClient, None]:
     The `base_url` parameter is set to `http://localhost:8000`, which is
     the default URL for the FastAPI application.
 
-    The `timeout` parameter is set to 30 seconds, which is a reasonable
-    value for most test cases.
-
     The `yield` statement is used to pass the `AsyncClient` instance to
     the test functions. The `AsyncClient` instance is created before the
     test functions are run, and it is closed after the test functions are
