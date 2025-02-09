@@ -24,7 +24,7 @@
 - Set up Docker configuration ✅
 - Configure PostgreSQL database ✅
 - Implement basic FastAPI application ✅
-- Set up testing environment
+- Set up testing environment ✅
 - Create CI/CD pipeline basics
 
 ### Milestone 2: Core Data Models (1-2 weeks)
@@ -128,7 +128,7 @@ ExpenseSplits (
 │   ├── POST /login
 │   ├── POST /register
 │   └── POST /refresh-token
-├── /users
+├── /user
 │   ├── GET /me
 │   ├── PUT /me
 │   └── GET /me/expenses
