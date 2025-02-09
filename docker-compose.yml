@@ -7,7 +7,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=expense_tracker # This ensures the DB is created
+      - POSTGRES_DB=expense_tracker
     ports:
       - "5432:5432"
     healthcheck:

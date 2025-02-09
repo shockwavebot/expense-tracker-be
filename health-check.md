@@ -1,5 +1,6 @@
 # Health check
-## Start db&app 
+## Start db in docker and start app in Python venv
+
 TODO: one command to rule them all
 
 ```
