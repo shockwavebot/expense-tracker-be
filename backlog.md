@@ -3,6 +3,8 @@
 ## 🐛 Issues
 Track all known issues and bugs here.
 
+- Missing tests for expenses endpoints
+
 ---
 ## 💡 Ideas
 List all feature suggestions and enhancements here.

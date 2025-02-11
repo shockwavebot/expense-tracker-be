@@ -1,5 +1,6 @@
 # expense_tracker/models/user.py
-from typing import TYPE_CHECKING, List
+from datetime import datetime
+from typing import TYPE_CHECKING, List, Optional
 
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -37,6 +38,35 @@ class User(Base, TimestampMixin):
     username: Mapped[str] = mapped_column(
         String(100),
         nullable=False
+    )
+
+    hashed_password: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
+    )
+
+    is_active: Mapped[bool] = mapped_column(
+        default=True,
+        nullable=False
+    )
+
+    is_verified: Mapped[bool] = mapped_column(
+        default=False,
+        nullable=False
+    )
+
+    verification_token: Mapped[Optional[str]] = mapped_column(
+        String(255),
+        nullable=True
+    )
+
+    password_reset_token: Mapped[Optional[str]] = mapped_column(
+        String(255),
+        nullable=True
+    )
+
+    password_reset_expires: Mapped[Optional[datetime]] = mapped_column(
+        nullable=True
     )
 
     # Relationships

@@ -9,8 +9,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from expense_tracker.core.security import ALGORITHM, SECRET_KEY
 from expense_tracker.db.session import get_session
 from expense_tracker.models.user import User
-from expense_tracker.schemas.token import TokenData
-from expense_tracker.services.user import user_service
+from expense_tracker.schemas.auth import TokenData
+from expense_tracker.services.user import UserService as user_service
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/login")
 
