@@ -20,5 +20,6 @@
 		},
 		"python.defaultInterpreterPath": ".venv/bin/python",
 		"cSpell.enabled": false,
+		"cSpell.diagnosticLevel": "Hint",
 	}
 }

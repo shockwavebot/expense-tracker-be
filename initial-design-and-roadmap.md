@@ -12,11 +12,21 @@
 - Backend Framework: FastAPI (Python)
 - Database: PostgreSQL
 - ORM: SQLAlchemy
+- Alembic for migrations
 - API Documentation: OpenAPI (Swagger)
 - Authentication: JWT
 - Testing: pytest
 - Containerization: Docker
 - Development Tools: uv (dependency management)
+
+## Best Practices
+1. Use dependency injection
+2. Implement proper error handling
+3. Follow REST API conventions
+4. Use async/await where appropriate
+5. Implement proper validation
+6. Use type hints
+7. Follow PEP 8 style guide
 
 ## Phase 1: Backend Foundation & Core Features
 ### Milestone 1: Project Setup (1-2 weeks)
