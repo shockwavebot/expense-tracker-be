@@ -4,7 +4,12 @@ Read [init design and roadmap](initial-design-and-roadmap.md)
 
 ---
 ## TODO 
- - auth - choosing the lib
+ - auth
+    - choosing the lib: bcrypt, argon2, passlib, hashlib, pbkdf2: winner is `argon2-cffi`✅
+    - add `fastapi-users[sqlalchemy]`✅
+    - ⏳ db migration
+    - ⏳ testing
+    - ⏳ add services
 
 ## 🐛 Issues
 Track all known issues and bugs here.
