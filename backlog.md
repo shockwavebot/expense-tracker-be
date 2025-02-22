@@ -1,5 +1,11 @@
 # Backlog
+
+Read [init design and roadmap](initial-design-and-roadmap.md)
+
 ---
+## TODO 
+ - auth - choosing the lib
+
 ## 🐛 Issues
 Track all known issues and bugs here.
 
@@ -8,7 +14,7 @@ Track all known issues and bugs here.
 List all feature suggestions and enhancements here.
 - **Testing: DB cleanup before tests with predefined data in it**
   - **Description**: As wip, initial prod db migration is cloned to test db, db should be always in same state
-- **DB: do not use builtin table neame user, use users**
+- **DB: do not use builtin table name user, use users**
   - **Description**: create a db migration script for renaming the table
 
 ---
